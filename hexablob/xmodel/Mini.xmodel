@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<custommodel 
+name="Custom" parm1="10" parm2="10" Depth="1" StringType="RGB Nodes" Transparency="0" PixelSize="2" ModelBrightness="" Antialias="1" StrandNames="" NodeNames="" CustomModel=",,1,,2,,3,,,;,,,,,,,,,;,7,,6,,5,,4,,;,,,,,,,,,;8,,9,,10,,11,,12,;,,,,,,,,,;,16,,15,,14,,13,,;,,,,,,,,,;,,17,,18,,19,,,;,,,,,,,,," SourceVersion="2020.31"  >
+<subModel name="Inner Ring" layout="horizontal" type="ranges" line0="14,15" line1="9,11" line2="5,6">
+  <ControllerConnection/>
+</subModel>
+<subModel name="outer ring" layout="horizontal" type="ranges" line0="17,18,19" line1="13,16" line2="8,12" line3="4,7" line4="1,2,3">
+  <ControllerConnection/>
+</subModel>
+<subModel name="Bullseye" layout="horizontal" type="ranges" line0="10">
+  <ControllerConnection/>
+</subModel>
+<modelGroup selected="0" name="Hex" LayoutGroup="Default" GridSize="400" XCentreOffset="0" YCentreOffset="0" layout="minimalGrid" models="Custom-2,Custom-3"/>
+
+</custommodel>

@@ -11,10 +11,12 @@
 CRGB leds[NUM_LEDS];
 File dataFile;
 
+
+
 int test_number;
 long test_wait;
 
-bool show_ip;
+
 
 #define LEDNUMLEN 12 //Max length of the number LED array, or rather the max amount of pixels to use per number
 //List LEDs to light up by number, 255 terminates the array
@@ -46,10 +48,11 @@ headerData_t headerData;
 char rawData[20]; //Raw header data, probably don't actually need this
 char ledData[256]; //needs to be at least as big as the stepsize?
 bool running;
-int delay_amount = 25;
 
-void openeseq (char* filename)
+void openeseq (String filename)
 {
+  fname_curr = "Nothing";
+  running = false;
   dataFile = FSEQFS.open(filename, "r");
   Serial.println("File size: " + String(dataFile.size()));
   if (dataFile.size() > 0)
@@ -72,14 +75,12 @@ void openeseq (char* filename)
    //Rewind to the start of the data
    dataFile.seek (sizeof(headerData));
    running = true;  
+   fname_curr = filename;
   }
 }
 
 void playeseq ()
 {
-  if (!running)
-    return;
-    
   if (dataFile.available() < headerData.stepsize)
   {
     dataFile.seek (sizeof(headerData));
@@ -98,7 +99,7 @@ void playeseq ()
 
   
   FastLED.show();
-  delay(delay_amount);
+  delay(led_delay);
 }
 
 
@@ -176,13 +177,15 @@ void led_drawnum (int num)
 }
 
 void led_loop() { 
-  playeseq();
+  if (running)
+    playeseq();
 }
 
 void led_setup() { 
   Serial.println ("Setting up LEDs");
-  LEDS.addLeds<WS2812,DATA_PIN,RGB>(leds,NUM_LEDS);
+  LEDS.addLeds<WS2812,DATA_PIN,GRB>(leds,NUM_LEDS);
   LEDS.setBrightness(40);
+  brightness = 40;
   //Clear the strip
   fill_solid(leds, NUM_LEDS, CRGB::Blue);
   FastLED.show();
@@ -193,18 +196,7 @@ void led_setup() {
     Serial.printf("Unable to open FS, aborting\n");
     //TODO Do an error
     }
-    /*
-    Dir dir = LittleFS.openDir("/");
-    while (dir.next()) 
-    {
-      Serial.println(dir.fileName());
-       if(dir.fileSize()) 
-       {
-        File f = dir.openFile("r");
-        Serial.println(f.size());
-        }
-    }
-    */
+
   openeseq("Custom-2.eseq");
   test_wait = millis();
   test_number = 0;

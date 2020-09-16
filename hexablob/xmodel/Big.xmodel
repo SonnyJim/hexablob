@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <custommodel 
 name="Custom-2" parm1="17" parm2="17" Depth="1" StringType="RGB Nodes" Transparency="0" PixelSize="2" ModelBrightness="" Antialias="1" StrandNames="" NodeNames="" CustomModel=",,,,5,,4,,3,,2,,1,,,,;,,,,,,,,,,,,,,,,;,,,6,,7,,8,,9,,10,,11,,,;,,,,,,,,,,,,,,,,;,,18,,17,,16,,15,,14,,13,,12,,;,,,,,,,,,,,,,,,,;,19,,20,,21,,22,,23,,24,,25,,26,;,,,,,,,,,,,,,,,,;35,,34,,33,,32,,31,,30,,29,,28,,27;,,,,,,,,,,,,,,,,;,36,,37,,38,,39,,40,,41,,42,,43,;,,,,,,,,,,,,,,,,;,,50,,49,,48,,47,,46,,45,,44,,;,,,,,,,,,,,,,,,,;,,,51,,52,,53,,54,,55,,56,,,;,,,,,,,,,,,,,,,,;,,,,61,,60,,59,,58,,57,,,," SourceVersion="2020.31"  >
+<subModel name="Bullseye" layout="horizontal" type="ranges" line0="31">
+  <ControllerConnection/>
+</subModel>
+<subModel name="Ring1" layout="horizontal" type="ranges" line0="22,23,32,30,39,40">
+  <ControllerConnection/>
+</subModel>
+<subModel name="Ring2" layout="horizontal" type="ranges" line0="" line1="14,15,16,21,24,33,29,38,41,46,47,48">
+  <ControllerConnection/>
+</subModel>
+<subModel name="Ring3" layout="horizontal" type="ranges" line0="7,8,9,10,17,13,20,25,34,28,47,42,49,45,52,53,54,55">
+  <ControllerConnection/>
+</subModel>
+<subModel name="Ring4" layout="horizontal" type="ranges" line0="1,2,3,4,5,6,11,12,18,19,26,27,35,36,43,44,50,51,56,61,60,59,58,57">
+  <ControllerConnection/>
+</subModel>
 </custommodel>

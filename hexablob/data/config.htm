@@ -1,26 +1,59 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title></title>
+
+  <link rel="stylesheet" href="https://taniarascia.github.io/primitive/css/main.css">
+  <link rel="icon" href="favicon.png">
+</head>
+
+<body>
+
+<h1>Hexablob Config</h1>
+
+<p>Currently playing: %fname_curr%</p>
+
+<form action="/config">
+  <label for="effects">Choose an effect:</label>
+  <select name="effects" id="effects">
+	  %combobox%
+  </select>
+  <input type="checkbox" id="delete" name="delete" value="True">
+  <label for="delete"> Delete effect</label>
+  <br><br>
+  <input type="submit" value="Apply">
+</form>
+
+<p> Brightness: %brightness%<p> 
 <div class="slidecontainer">
-  <input type="range" min="1" max="255" value="50" class="slider" id="brightness">
+  <input type="range" min="1" max="255" value="%brightness%" class="slider" id="brightness">
+</div>
+	<p>Speed<p> 
+<div class="slidecontainer">
+  <input type="range" min="1" max="200" value="%led_delay%" class="slider" id="led_delay">
 </div>
 	
-
-	
-<button type="button" onclick="IDidAPoo();">Mangy trout</button>
 <script>
-	function IDidAPoo () {
+var slider = document.getElementById("brightness");
+var delay = document.getElementById("led_delay");
+slider.onchange = function() {
 		  var xhttp = new XMLHttpRequest();
-		  xhttp.open("GET", "/IDidAPoo", true);
+		  xhttp.open("GET", "/brightness?brightness=" + this.value, true);
 		  xhttp.send();
 	}
-
-var slider = document.getElementById("brightness");
-slider.oninput = function() {
+delay.onchange = function() {
 		  var xhttp = new XMLHttpRequest();
-		  xhttp.open("POST", "/brightness", true);
-		  xhttp.send(this.value);
+		  xhttp.open("GET", "/delay?delay=" + this.value, true);
+		  xhttp.send();
 	}
 </script>
 
 
+</body>
 </html>
 

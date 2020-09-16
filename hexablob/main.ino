@@ -1,5 +1,9 @@
 //TODO Scan local subnet for your phone to see if you are at home to turn the lights on
 //Have an 'error connection' color.
+//Store currently playing to file, along with other config data
+//Analogue clock face
+//Pimpin' ain't easy, hours in characters, minutes in LEDs - 1
+//
 
 #include <ESP8266mDNS.h> 
 
@@ -18,8 +22,9 @@ void setup ()
   {
     Serial.println("Error setting up MDNS responder!");
   }
-  led_drawip();
+  //led_drawip();
   ntp_setup ();
+  fs_setup ();
   webserver_setup ();
   
   /*

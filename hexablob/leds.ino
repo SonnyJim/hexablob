@@ -1,8 +1,5 @@
 #include <FastLED.h>
-#include <FS.h>
-#include <LittleFS.h>
 
-#define FSEQFS LittleFS
 
 #define NUM_LEDS 183 
 #define DATA_PIN 4
@@ -11,29 +8,44 @@
 CRGB leds[NUM_LEDS];
 File dataFile;
 
-
-
-int test_number;
-long test_wait;
-
+extern bool time_valid;
 
 
 #define LEDNUMLEN 12 //Max length of the number LED array, or rather the max amount of pixels to use per number
-//List LEDs to light up by number, 255 terminates the array
+//List LEDs to light up by number, 254 terminates the array
 const uint8_t numbers[10][LEDNUMLEN] = {
-{7, 8, 13, 15, 20, 23, 29, 31, 38, 39 , 255}, //0
-{8, 14, 22, 30, 39, 255},  //1
-{7, 8, 13, 15, 22, 30, 38, 39,40, 255}, //2
-{7, 8, 13, 15, 22, 29, 31, 38, 39 , 255}, //3
-{15,13,21,22,29,39, 255}, //4 eek
-{7,8, 15,21,22,29,38,39,255}, //5
-{7,8,15,21,22,31,29,38,39,255},  //6
-{7,8,9,13,22,30,38,255}, //7
-{7,8,15,13,21,22,31,29,38,39,255}, //8
-{7,8,15,13,21,22,29,38,39,255}, //9
+{7, 8, 13, 15, 20, 23, 29, 31, 38, 39 , 254}, //0
+{8, 14, 22, 30, 39, 254},  //1
+{7, 8, 13, 15, 22, 30, 38, 39,40, 254}, //2
+{7, 8, 13, 15, 22, 29, 31, 38, 39 , 254}, //3
+{15,13,21,22,29,39, 254}, //4 eek
+{7,8, 15,21,22,29,38,39,254}, //5
+{7,8,15,21,22,31,29,38,39,254},  //6
+{7,8,9,13,22,30,38,254}, //7
+{7,8,15,13,21,22,31,29,38,39,254}, //8
+{7,8,15,13,21,22,29,38,39,254}, //9
+};
+
+#define MAXLEDLEN 14
+const uint8_t timenum[MAXLEDLEN][14] = {
+{14,21,30,29,38,39,46,254},//0
+{14,21,22,30,38,39,46,254},//1
+{15,14,20,22,30,38,47,46,45,254},//2
+{15,14,20,22,30,37,39,47,46,254},//3
+{15,13,21,22,29,39, 254},//4
+{15,14,20,31,30,39,47,46.254},//5
+{15,14,20,31,30,37,39,47,46.254},//6
+{15,14,13,22,30,38,47.254}, //7
+{15,14,20,22,31,30,37,39,47,46.254},//8
+{15,14,20,22,31,30,39,47,46.254},//9
+{15,13,20,22,23,31,30,28,37,39,40,47,45,254},//10
+{15,13,20,22,31,29,37,39,47,45.254}, //11
+{15,13,12,20,22,24,31,28,37,40,47,45,44.254},
 };
 
 const uint8_t dot[4] = {14,21,22,30};
+
+const uint8_t outside_min[24] = {2,1,0,10,11,25,26,42,43,55,56,57,58,59,60,50,49,35,34,18,17,5,4,3};
 
 typedef struct _headerData_t
 {
@@ -51,7 +63,8 @@ bool running;
 
 void openeseq (String filename)
 {
-  fname_curr = "Nothing";
+  Serial.println ("Opening: " + filename);
+  strcpy (cfg.fname_curr, "Nothing");
   running = false;
   dataFile = FSEQFS.open(filename, "r");
   Serial.println("File size: " + String(dataFile.size()));
@@ -75,7 +88,7 @@ void openeseq (String filename)
    //Rewind to the start of the data
    dataFile.seek (sizeof(headerData));
    running = true;  
-   fname_curr = filename;
+   filename.toCharArray(cfg.fname_curr, filename.length() + 1);
   }
 }
 
@@ -98,8 +111,7 @@ void playeseq ()
   //led_drawtime (test_number);
 
   
-  FastLED.show();
-  delay(led_delay);
+
 }
 
 
@@ -117,13 +129,77 @@ void led_drawtime (int num)
 
   for (i = 0; i < LEDNUMLEN; i++)
   {
-    if (numbers[num][i] == 255)
+    if (numbers[num][i] == 254)
       return; //All finished
     else
-      leds[numbers[num][i]] = CRGB(255,255,255);
+      leds[numbers[num][i]] = CRGB(254,254,254);
   }
 }
 */
+
+void led_drawmin (int minutes)
+{
+  int i;
+  for (i = 60; i > (60 - minutes); i--)
+  {
+    leds[i] = CRGB(0,0,255);
+  }
+
+}
+
+void led_drawoutsidemin (int minutes)
+{
+  int remap = map (minutes, 0, 59, 0, 24);
+  int i;
+  for (i = 0;i < remap; i++)
+  {
+    /*
+    if (i == remap -1)
+      leds[outside_min[i]]  += CRGB(254,0,0);
+    else
+      leds[outside_min[i]]  += CRGB(0,0,254);
+      */
+    int blue = map (i, 0, remap, 0, 255);
+    leds[outside_min[i]]  += CRGB(0,0,blue);
+  }
+}
+
+
+void led_drawsecs (int seconds)
+{
+  //int remap = map (seconds, 0, 59, 0, 24);
+  int remap;
+  if (seconds <24)
+    remap = seconds;
+  else if (seconds <48)
+    remap = seconds - 24;
+  else if (seconds < 60)
+    remap = seconds - 48 + 1;
+    
+  leds[outside_min[remap]] += CRGB(128,128,128);
+    
+}
+
+void led_drawtime ()
+{
+  int hour;
+  int minutes;
+
+  hour = ntp_gethours();
+  minutes = ntp_getminutes();
+  /*
+  Serial.println ("Hour " + String(ntp_gethours()));
+  Serial.println ("Minutes " + String(ntp_getminutes()));
+  */
+  if (hour > 12)
+    hour -= 12;
+    
+
+  led_drawoutsidemin(minutes);
+  led_drawsecs (ntp_getseconds());
+  led_drawtimenum(hour);
+}
+
 void led_drawip ()
 {
   //Probably want to check to see if we are in AP mode, if so, skip this and signal the user
@@ -167,38 +243,48 @@ void led_drawdot ()
 void led_drawnum (int num)
 {
   int i;
-  for (i = 0; i < LEDNUMLEN; i++)
+  for (i = 0; i < MAXLEDLEN; i++)
   {
-    if (numbers[num][i] == 255)
+    if (numbers[num][i] == 254)
       return; //All finished
     else
       leds[numbers[num][i]] = CRGB(255,255,255);
   }
 }
 
+void led_drawtimenum (int num)
+{
+  int i;
+  for (i = 0; i < MAXLEDLEN; i++)
+  {
+    if (timenum[num][i] == 254)
+      return; //All finished
+    else
+      leds[timenum[num][i]] = CRGB(255,255,255);
+  }
+}
+
 void led_loop() { 
   if (running)
     playeseq();
+  if (time_valid && cfg.show_time)
+    led_drawtime();
+
+  FastLED.show();
+  delay(cfg.led_delay);
 }
 
 void led_setup() { 
   Serial.println ("Setting up LEDs");
   LEDS.addLeds<WS2812,DATA_PIN,GRB>(leds,NUM_LEDS);
-  LEDS.setBrightness(40);
-  brightness = 40;
+  LEDS.setBrightness(cfg.brightness);
   //Clear the strip
   fill_solid(leds, NUM_LEDS, CRGB::Blue);
   FastLED.show();
   delay(500);
   FastLED.clear();
   FastLED.show();
-    if (!FSEQFS.begin()) {
-    Serial.printf("Unable to open FS, aborting\n");
-    //TODO Do an error
-    }
 
-  openeseq("Custom-2.eseq");
-  test_wait = millis();
-  test_number = 0;
-  show_ip = true;
+
+  
 }

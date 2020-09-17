@@ -25,9 +25,17 @@
   </select>
   <input type="checkbox" id="delete" name="delete" value="True">
   <label for="delete"> Delete effect</label>
-  <br><br>
+  <br>
+  
+  <br>
   <input type="submit" value="Apply">
 </form>
+
+<br>
+
+<input type="checkbox" id="showtime" onclick="showtime()" name="showtime" value="%show_time%">
+  <label for="showtime">Show time</label>
+<br>
 
 <p> Brightness: %brightness%<p> 
 <div class="slidecontainer">
@@ -35,12 +43,14 @@
 </div>
 	<p>Speed<p> 
 <div class="slidecontainer">
-  <input type="range" min="1" max="200" value="%led_delay%" class="slider" id="led_delay">
+  <input type="range" min="1" max="100" value="%led_delay%" class="slider" id="led_delay">
 </div>
-	
+<p> <button onclick="save()" type="button">Save</button>	</p>
 <script>
+
 var slider = document.getElementById("brightness");
 var delay = document.getElementById("led_delay");
+
 slider.onchange = function() {
 		  var xhttp = new XMLHttpRequest();
 		  xhttp.open("GET", "/brightness?brightness=" + this.value, true);
@@ -51,6 +61,19 @@ delay.onchange = function() {
 		  xhttp.open("GET", "/delay?delay=" + this.value, true);
 		  xhttp.send();
 	}
+function save() {
+		var xhttp = new XMLHttpRequest();
+		xhttp.open("GET", "/save", true);
+		xhttp.send();
+	}
+function showtime() {
+		var checkBox =  document.getElementById("showtime");
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.open("GET", "/config?showtime=" + checkBox.checked, true);
+		  xhttp.send();
+	}
+
+
 </script>
 
 

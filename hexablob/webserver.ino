@@ -10,17 +10,23 @@ String fnameProcessor(const String& var)
   if(var == "combobox")
     return String(getFileCombo());
   else if (var == "fname_curr")
-    return String (fname_curr);
+    return String (cfg.fname_curr);
   else if (var == "brightness")
-    return String (brightness);   
+    return String (cfg.brightness);   
   else if (var =="led_delay")
-    return String (led_delay);
+    return String (cfg.led_delay);
+  else if (var =="show_time")
+  {
+    if (cfg.show_time)
+      return String("True");
+    else
+      return String("False");
+  }
   return String();
 }
 
 String getFileCombo()
 {
-  //  <option value="mercedes">Mercedes</option>
   const String front = "<option value=\"";
   const String middle = "\">";
   const String rear = "</option>";
@@ -155,20 +161,58 @@ void webserver_setup ()
 
   });
   */
+  webServer.on("/save", HTTP_GET, [](AsyncWebServerRequest *request)
+  {
+    Serial.println ("Saving Hexablob config");
+    cfg_save ();
+  });
   
   webServer.on("/config", HTTP_GET, [](AsyncWebServerRequest *request)
   {
-    
- 
+   AsyncWebParameter* p;
+   Serial.println ("GET /CONFIG");
+
+/*
+int params = request->params();
+for(int i=0;i<params;i++){
+  AsyncWebParameter* p = request->getParam(i);
+  if(p->isFile()){ //p->isPost() is also true
+    Serial.printf("FILE[%s]: %s, size: %u\n", p->name().c_str(), p->value().c_str(), p->size());
+  } else if(p->isPost()){
+    Serial.printf("POST[%s]: %s\n", p->name().c_str(), p->value().c_str());
+  } else {
+    Serial.printf("GET[%s]: %s\n", p->name().c_str(), p->value().c_str());
+  }
+}
+ */
   if(request->hasParam("effects")) 
   {
-    AsyncWebParameter* p = request->getParam("effects");
+    p = request->getParam("effects");
     if (request->hasParam("delete"))
       LittleFS.remove(p->value());
     else
       openeseq(p->value());
+
+    
   }
-    request->send(LittleFS, "/config.htm", String(), false, fnameProcessor);
+  if (request->hasParam("showtime"))
+    {
+      
+       p = request->getParam("showtime");
+       Serial.println ("SHOWTIME: " + String (p->value()));
+      if (p->value() == "true")
+      {
+        Serial.println ("THIS IS TRUE");
+      
+        cfg.show_time = true;
+      }
+      else      {
+        Serial.println ("THIS IS FALSE");
+        cfg.show_time = false;
+      }
+    }
+    
+  request->send(LittleFS, "/config.htm", String(), false, fnameProcessor);
   });
 
 
@@ -178,8 +222,8 @@ void webserver_setup ()
       if(request->hasParam("brightness")) 
   {
     AsyncWebParameter* p = request->getParam("brightness");
-    brightness = p->value().toInt();
-    LEDS.setBrightness(brightness);
+    cfg.brightness = p->value().toInt();
+    LEDS.setBrightness(cfg.brightness);
   }
   });
 
@@ -189,7 +233,7 @@ void webserver_setup ()
       if(request->hasParam("delay")) 
   {
     AsyncWebParameter* p = request->getParam("delay");
-    led_delay = p->value().toInt();
+    cfg.led_delay = p->value().toInt();
   }
   });
   

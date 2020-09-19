@@ -2,9 +2,13 @@ body {
     background: #282828;
 }
 
+#container {
+  display: grid;
+}
+
 #grid {
     position: relative;
-    width: 90%;
+    width: 50%;
     margin: 0 auto;
     padding: 0; /* Clears unordered list default of 40px */
 }
@@ -19,8 +23,9 @@ body {
     list-style-type: none;
     position: relative;
     float: left;
-     width: 12.85714285714286%;
-    padding: 0 0 14.87860145166612% 0;
+    width: 6.857%;
+    padding: 0 0 11.879% 3.02%;
+    background: blue;
     -o-transform: rotate(-60deg) skewY(30deg);
     -moz-transform: rotate(-60deg) skewY(30deg);
     -webkit-transform: rotate(-60deg) skewY(30deg);
@@ -53,7 +58,20 @@ body {
   margin: 0.5%;
 }
 
-#grid li:nth-child(14n+8), #grid li:nth-child(14n+9), #grid li:nth-child(14n+10), #grid li:nth-child(14n+11), #grid li:nth-child(14n+12), #grid li:nth-child(14n+13), #grid li:nth-child(14n+14) {
+#grid li .hexagon:nth-child(4) {
+  background: blue;
+}
+
+#grid li:nth-child(18n+10),
+#grid li:nth-child(18n+11),
+#grid li:nth-child(18n+12),
+#grid li:nth-child(18n+13),
+#grid li:nth-child(18n+14),
+#grid li:nth-child(18n+15),
+#grid li:nth-child(18n+16),
+#grid li:nth-child(18n+17),
+#grid li:nth-child(18n+18)
+{
     margin-top: -2.9285714285%;
     margin-bottom: -2.9285714285%;
     -o-transform: translateX(50%) rotate(-60deg) skewY(30deg);
@@ -63,6 +81,6 @@ body {
     transform: translateX(50%) rotate(-60deg) skewY(30deg);
 }
 
-#grid li:nth-child(14n+8) { 
+#grid li:nth-child(18n+10) {
     margin-left: 1%;
 }

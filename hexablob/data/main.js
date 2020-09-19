@@ -12,6 +12,10 @@ const cellMap = [
 
 let color = '#00FF00';
 
+function formatLights() {
+  return Array.from($('li div'))
+}
+
 $(document).ready(() => {
 
   // Colour picker
@@ -35,11 +39,11 @@ $(document).ready(() => {
 
 
   // Mouse over event
-  $('li div').on('mouseenter', (e) => {
+  $('li div').on('click', (e) => {
     const cell = $(e.target)
     const key = cell.attr('data-key')
     const light = cellMap[key]
-    if (e.shiftKey && light > -1) {
+    if (light > -1) {
       cell.css('background-color', color)
     }
     console.log(light);

@@ -6,17 +6,17 @@ body {
   display: grid;
 }
 
+.clear:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
 #grid {
     position: relative;
     width: 50%;
     margin: 0 auto;
     padding: 0; /* Clears unordered list default of 40px */
-}
-
-.clear:after {
-    content: "";
-    display: block;
-    clear: both;
 }
 
 #grid li {

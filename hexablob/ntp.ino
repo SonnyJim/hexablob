@@ -2,38 +2,24 @@
 #include <sys/time.h>                   // struct timeval
 #include <coredecls.h>                  // settimeofday_cb()
 
-#define TZ              9       // (utc+) TZ in hours
+
 #define DST_MN          60      // use 60mn for summer time in some countries
-
-////////////////////////////////////////////////////////
-
-#define TZ_MN           ((TZ)*60)
-#define TZ_SEC          ((TZ)*3600)
 #define DST_SEC         ((DST_MN)*60)
 
-//timeval cbtime;      // time set in callback
-//bool cbtime_set = false;
-
+time_t now;
 bool time_valid = false;
 
 void time_is_set(void) {
-  //gettimeofday(&cbtime, NULL);
-  //cbtime_set = true;
   time_valid = true;
   Serial.println("------------------ settimeofday() was called ------------------");
 }
 
 void ntp_setup() {
+  cfg.tz_offset = 9;
   settimeofday_cb(time_is_set);
 
-  configTime(TZ_SEC, DST_SEC, "au.pool.ntp.org");
-  //TO
+  configTime(cfg.tz_offset * 3600, DST_SEC, "pool.ntp.org");
 }
-
-timeval tv;
-timespec tp;
-time_t now;
-uint32_t now_ms, now_us;
 
 int ntp_gethours ()
 {

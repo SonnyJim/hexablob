@@ -5,6 +5,7 @@ char ip_addr[15];
 
 int freespace;
 
+//Processor for the config page
 String fnameProcessor(const String& var)
 {
   if(var == "combobox")
@@ -23,9 +24,14 @@ String fnameProcessor(const String& var)
       return String("False");
   }
   else if (var =="show_ip")
-    return String ("True");
+  {
+    if (cfg.show_ip)
+      return String ("True");
     else
-    return String ("False");
+      return String ("False");
+  }
+  else if (var =="fs_free")
+    return String (fs_free());
   return String();
 }
 
@@ -146,25 +152,24 @@ void webserver_setup ()
   webServer.serveStatic("/index.htm", LittleFS, "/index.htm");
   //webServer.serveStatic("/config", LittleFS, "/config.htm");
   
-  webServer.serveStatic("/upload", LittleFS, "/upload.htm");
-  
+  //webServer.serveStatic("/upload", LittleFS, "/upload.htm");
+
+  webServer.on("/upload", HTTP_GET, [](AsyncWebServerRequest *request)
+  {
+    request->send(LittleFS, "/upload.htm", String(), false, fnameProcessor);
+  });
+
   webServer.on("/upload", HTTP_POST, [](AsyncWebServerRequest *request) {
 
         request->send(200);
         
       }, handleUpload);
-  
+
   webServer.on("/success", HTTP_GET, [](AsyncWebServerRequest *request)
   {
     request->send(LittleFS, "/success.htm", String(), false, reprocessor);
   });
 
-  /*
-  webServer.on("/config", HTTP_POST, [](AsyncWebServerRequest *request)
-  {
-
-  });
-  */
   webServer.on("/save", HTTP_GET, [](AsyncWebServerRequest *request)
   {
     Serial.println ("Saving Hexablob config");

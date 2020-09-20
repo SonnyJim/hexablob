@@ -9,12 +9,13 @@ typedef struct
   int led_delay;
   uint8_t brightness;
   bool show_time;
-  bool show_ip;
+  bool show_ip; //Show IP on boot via LEDs
+  int tz_offset; //Needs to be signed
+  bool summertime;
 } cfg_t;
 
 cfg_t         cfg;
  //
-
 //String fname_curr; //Currently playing filename
 bool show_ip; //Whether to flash the IP at startup
 
@@ -27,6 +28,7 @@ void cfg_default ()
   cfg.brightness = 40;
   cfg.show_time = true;
   cfg.show_ip = false;
+  cfg.tz_offset = 9;
 }
 
 bool cfg_load(void)

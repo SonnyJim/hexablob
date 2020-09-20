@@ -10,24 +10,23 @@ const cellMap = [
   -1, -1, 60, 59, 58, 57, 56, -1, -1,
 ]
 
-let color = '#00FF00';
+let state = {
+  palette: [],
+  color: '#00FF00'
+}
 
-function formatLights() {
-  return Array.from($('li div'))
+function setState(_state) {
+  console.log('state', _state);
+  state = _state
+}
+
+function getState() {
+  return state
 }
 
 $(document).ready(() => {
 
-  // Colour picker
-  $('#colorpicker').colpick({
-    colorScheme:'dark',
-    onChange:function(hsb,hex,rgb,el,bySetColor) {
-        const c = '#'+hex
-        color = c
-    }
-  })
-
-  // Colour cells
+  // Initialise cells
   const cells = Array.from($('li div'))
   cells.forEach((cell, i) => {
     if (cellMap[i] > -1) {
@@ -37,16 +36,38 @@ $(document).ready(() => {
     }
   });
 
+  // Colour picker
+  $('.palette').click(e => {
+    const palette = $(e.target)
+    const color = palette.css('background-color')
+    setState({
+      palette: Array.from($('.palette')).map(x => $(x).css('background-color')),
+      color
+    })
 
-  // Mouse over event
+    palette.colpick({
+      colorScheme:'dark',
+      onChange:(hsb, hex, rgb, el, bySetColor) => {
+        const color = '#'+hex
+        $(el).css('background-color', color)
+        setState({
+          palette: Array.from($('.palette')).map(x => $(x).css('background-color')),
+          color
+        })
+      },
+      submit: false
+    })
+  })
+
+  // Color cell event
   $('li div').on('click', (e) => {
     const cell = $(e.target)
     const key = cell.attr('data-key')
     const light = cellMap[key]
     if (light > -1) {
+      const color = getState()['color']
       cell.css('background-color', color)
     }
-    console.log(light);
   })
 
   //

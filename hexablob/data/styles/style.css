@@ -86,8 +86,6 @@ body {
 	padding: 0 0 0 320px;
 }
 
-
-
 .clear:after {
     content: "";
     display: block;
@@ -95,7 +93,7 @@ body {
 }
 
 #grid {
-    position: relative;
+    /* position: relative; */
     width: 100%;
     margin: 0 auto;
     padding: 0; /* Clears unordered list default of 40px */
@@ -180,6 +178,13 @@ body {
 
 .left-sidebar img {
 	width: 100%;
+}
+
+.left-sidebar > .palette {
+	width: 10%;
+	display: inline-block;
+	height: 20px;
+	border: 1px solid black;
 }
 
 /* Footer

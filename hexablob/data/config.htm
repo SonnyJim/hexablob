@@ -37,6 +37,10 @@
   <label for="showtime">Show time</label>
 <br>
 
+<input type="checkbox" id="show_ip" onclick="show_ip()" name="show_ip" value="%show_ip%">
+  <label for="show_ip">Show IP on boot</label>
+<br>
+
 <p> Brightness: %brightness%<p> 
 <div class="slidecontainer">
   <input type="range" min="1" max="255" value="%brightness%" class="slider" id="brightness">
@@ -72,6 +76,14 @@ function showtime() {
 		  xhttp.open("GET", "/config?showtime=" + checkBox.checked, true);
 		  xhttp.send();
 	}
+
+function show_ip() {
+		var checkBox =  document.getElementById("show_ip");
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.open("GET", "/config?show_ip=" + checkBox.checked, true);
+		  xhttp.send();
+	}
+
 
 
 </script>

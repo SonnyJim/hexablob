@@ -9,6 +9,7 @@ typedef struct
   int led_delay;
   uint8_t brightness;
   bool show_time;
+  bool show_ip;
 } cfg_t;
 
 cfg_t         cfg;
@@ -25,6 +26,7 @@ void cfg_default ()
   cfg.led_delay = 25;
   cfg.brightness = 40;
   cfg.show_time = true;
+  cfg.show_ip = false;
 }
 
 bool cfg_load(void)

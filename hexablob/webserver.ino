@@ -22,6 +22,10 @@ String fnameProcessor(const String& var)
     else
       return String("False");
   }
+  else if (var =="show_ip")
+    return String ("True");
+    else
+    return String ("False");
   return String();
 }
 
@@ -195,6 +199,16 @@ for(int i=0;i<params;i++){
 
     
   }
+  
+  if(request->hasParam("show_ip")) 
+  {
+    p = request->getParam("show_ip");
+      if (p->value() == "true")
+        cfg.show_ip = true;
+      else
+        cfg.show_ip = false;
+  }
+  
   if (request->hasParam("showtime"))
     {
       

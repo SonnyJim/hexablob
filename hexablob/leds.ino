@@ -4,9 +4,8 @@
 #define NUM_LEDS 183 
 #define DATA_PIN 4
 
-// Define the array of leds
 CRGB leds[NUM_LEDS];
-File dataFile;
+File dataFile; //ESEQ data file
 
 extern bool time_valid;
 
@@ -33,14 +32,14 @@ const uint8_t timenum[MAXLEDLEN][14] = {
 {15,14,20,22,30,38,47,46,45,254},//2
 {15,14,20,22,30,37,39,47,46,254},//3
 {15,13,21,22,29,39, 254},//4
-{15,14,20,31,30,39,47,46.254},//5
-{15,14,20,31,30,37,39,47,46.254},//6
-{15,14,13,22,30,38,47.254}, //7
-{15,14,20,22,31,30,37,39,47,46.254},//8
-{15,14,20,22,31,30,39,47,46.254},//9
+{15,14,20,31,30,39,47,46,254},//5
+{15,14,20,31,30,37,39,47,46,254},//6
+{15,14,13,22,30,38,47,254}, //7
+{15,14,20,22,31,30,37,39,47,46, 254},//8
+{15,14,20,22,31,30,39,47,46, 254},//9
 {15,13,20,22,23,31,30,28,37,39,40,47,45,254},//10
-{15,13,20,22,31,29,37,39,47,45.254}, //11
-{15,13,12,20,22,24,31,28,37,40,47,45,44.254},
+{15,13,20,22,31,29,37,39,47,45,254}, //11
+{15,13,12,20,22,24,31,28,37,40,47,45,44,254},
 };
 
 const uint8_t dot[4] = {14,21,22,30};
@@ -108,35 +107,9 @@ void playeseq ()
   
   memcpy (&leds, ledData, headerData.stepsize);
   
-  //led_drawtime (test_number);
-
-  
-
 }
 
-
-/*
-void led_drawtime (int num)
-{
-  if (millis() > test_wait + 1000)
-  {
-    test_number++;
-    if (test_number > 9)
-      test_number = 0;
-    test_wait = millis();
-  }
-  int i;
-
-  for (i = 0; i < LEDNUMLEN; i++)
-  {
-    if (numbers[num][i] == 254)
-      return; //All finished
-    else
-      leds[numbers[num][i]] = CRGB(254,254,254);
-  }
-}
-*/
-
+//Pimp display
 void led_drawmin (int minutes)
 {
   int i;
@@ -153,20 +126,24 @@ void led_drawoutsidemin (int minutes)
   int i;
   for (i = 0;i < remap; i++)
   {
-    /*
-    if (i == remap -1)
-      leds[outside_min[i]]  += CRGB(254,0,0);
-    else
-      leds[outside_min[i]]  += CRGB(0,0,254);
-      */
-    int blue = map (i, 0, remap, 0, 255);
+    leds[outside_min[i]] -= CRGB(225,225,225);
+    int blue = map (i, 0, remap, 25, 255);
     leds[outside_min[i]]  += CRGB(0,0,blue);
   }
 }
 
 
+
+int seconds_fade;
+int seconds_old;
+
 void led_drawsecs (int seconds)
-{
+{ 
+  if (seconds_old != seconds)
+  {
+    seconds_fade = 230;
+    seconds_old = seconds;
+  }
   //int remap = map (seconds, 0, 59, 0, 24);
   int remap;
   if (seconds <24)
@@ -174,9 +151,13 @@ void led_drawsecs (int seconds)
   else if (seconds <48)
     remap = seconds - 24;
   else if (seconds < 60)
-    remap = seconds - 48 + 1;
+    remap = map (seconds-48, 0, 12, 0, 24);
     
-  leds[outside_min[remap]] += CRGB(128,128,128);
+  leds[outside_min[remap]] += CRGB(seconds_fade,seconds_fade,seconds_fade);
+  if (seconds_fade > 10)
+    seconds_fade -= 11;
+  else
+    seconds_fade = 0;
     
 }
 

@@ -28,6 +28,8 @@ void setup ()
   
   ntp_setup ();
   fs_setup ();
+  if (cfg.show_ip)
+    led_drawip();
   openeseq (cfg.fname_curr);
   webserver_setup ();
   

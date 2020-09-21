@@ -31,7 +31,9 @@ String fnameProcessor(const String& var)
       return String ("False");
   }
   else if (var =="fs_free")
-    return String (fs_free());
+    return String (fs_free() / 1024);
+  else if (var =="tz_offset")
+    return String (cfg.tz_offset);
   return String();
 }
 
@@ -218,17 +220,11 @@ for(int i=0;i<params;i++){
     {
       
        p = request->getParam("showtime");
-       Serial.println ("SHOWTIME: " + String (p->value()));
       if (p->value() == "true")
-      {
-        Serial.println ("THIS IS TRUE");
-      
         cfg.show_time = true;
-      }
-      else      {
-        Serial.println ("THIS IS FALSE");
+      else      
         cfg.show_time = false;
-      }
+        
     }
     
   request->send(LittleFS, "/config.htm", String(), false, fnameProcessor);
@@ -245,7 +241,7 @@ for(int i=0;i<params;i++){
     LEDS.setBrightness(cfg.brightness);
   }
   });
-
+  
   webServer.on("/delay", HTTP_GET, [](AsyncWebServerRequest *request)
   {
 
@@ -256,6 +252,16 @@ for(int i=0;i<params;i++){
   }
   });
   
+  webServer.on("/tz_offset", HTTP_GET, [](AsyncWebServerRequest *request)
+  {
+    Serial.println("tz_offset");
+    if(request->hasParam("tz_offset")) 
+    {
+      AsyncWebParameter* p = request->getParam("tz_offset");
+      cfg.tz_offset= p->value().toInt();
+      ntp_setup();
+     }
+  });
   webServer.begin();
 }
 

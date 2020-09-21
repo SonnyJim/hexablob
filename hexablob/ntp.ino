@@ -15,7 +15,6 @@ void time_is_set(void) {
 }
 
 void ntp_setup() {
-  cfg.tz_offset = 9;
   settimeofday_cb(time_is_set);
 
   configTime(cfg.tz_offset * 3600, DST_SEC, "pool.ntp.org");

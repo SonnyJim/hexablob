@@ -49,6 +49,9 @@
 <div class="slidecontainer">
   <input type="range" min="1" max="100" value="%led_delay%" class="slider" id="led_delay">
 </div>
+<label for="tz_offset">Timezone offset:</label>
+<input type="number" id="tz_offset" name="tz_offset" min="-24" max="24" value="%tz_offset%">
+<br>
 <p> <button onclick="save()" type="button">Save</button>	</p>
 <br>
 <a href="/upload">Upload page</a>
@@ -56,7 +59,13 @@
 
 var slider = document.getElementById("brightness");
 var delay = document.getElementById("led_delay");
+var tz = document.getElementById("tz_offset");
 
+tz.onchange = function() {
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.open("GET", "/tz_offset?tz_offset=" + this.value, true);
+		  xhttp.send();
+	}
 slider.onchange = function() {
 		  var xhttp = new XMLHttpRequest();
 		  xhttp.open("GET", "/brightness?brightness=" + this.value, true);

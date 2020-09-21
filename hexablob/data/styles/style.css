@@ -62,7 +62,7 @@ body {
 -----------------------------------------------------------------------------*/
 .header {
 	height: 60px;
-	background: #FFE680;
+	/* background: #FFE680; */
 }
 
 
@@ -90,6 +90,10 @@ body {
     content: "";
     display: block;
     clear: both;
+}
+
+#lights-output {
+	color: white;
 }
 
 #grid {
@@ -181,7 +185,7 @@ body {
 }
 
 .left-sidebar > .palette {
-	width: 10%;
+	width: 9%;
 	display: inline-block;
 	height: 20px;
 	border: 1px solid black;
@@ -191,5 +195,5 @@ body {
 -----------------------------------------------------------------------------*/
 .footer {
 	height: 100px;
-	background: #BFF08E;
+	/* background: #BFF08E; */
 }

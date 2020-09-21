@@ -24,17 +24,49 @@ function getState() {
   return state
 }
 
-$(document).ready(() => {
-
-  // Initialise cells
+function resetCells(color) {
   const cells = Array.from($('li div'))
   cells.forEach((cell, i) => {
     if (cellMap[i] > -1) {
-      $(cell).css('background-color', '#fdbf00')
+      $(cell).css('background-color', color)
     } else {
       $(cell).css('background-color', 'black')
     }
   });
+}
+
+function writeOut() {
+  const rgb = Array.from($('li div'))
+    .map(x => $(x).css('background-color'))
+    .map(x => x.replace('rgb(', '['))
+    .map(x => x.replace(')',']'))
+
+  const out = Array(61)
+  rgb.forEach((color, i) => {
+    if (cellMap[i] < 0) return
+    out[cellMap[i]] = color
+  });
+
+  $('#lights-output').text(out.join(', '))
+}
+
+$(document).ready(() => {
+
+  // Initialise cells
+  resetCells('#fdbf00')
+
+  // Initialise palette
+  $($('.palette')[8]).css('background-color', '#fdbf00')
+  setState({
+    ...getState(),
+    color: '#fdbf00'
+  })
+
+  // Reset cells button
+  $('#reset').click(e => {
+    resetCells($($('.palette')[8]).css('background-color'))
+    writeOut()
+  })
 
   // Colour picker
   $('.palette').click(e => {
@@ -68,7 +100,6 @@ $(document).ready(() => {
       const color = getState()['color']
       cell.css('background-color', color)
     }
+    writeOut()
   })
-
-  //
 })

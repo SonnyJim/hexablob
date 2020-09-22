@@ -34,6 +34,11 @@ String fnameProcessor(const String& var)
     return String (fs_free() / 1024);
   else if (var =="tz_offset")
     return String (cfg.tz_offset);
+  else if (var =="tzdbapikey")
+    return String (cfg.tzdbapikey);
+  else if (var =="location")
+    return String (cfg.location);
+    
   return String();
 }
 
@@ -226,6 +231,12 @@ for(int i=0;i<params;i++){
         cfg.show_time = false;
         
     }
+
+    if(request->hasParam("tzdbapikey")) 
+    {
+      AsyncWebParameter* p = request->getParam("tzdbapikey");
+      p->value().toCharArray(cfg.tzdbapikey, p->value().length() + 1);//Why??? pfft
+     }
     
   request->send(LittleFS, "/config.htm", String(), false, fnameProcessor);
   });
@@ -262,6 +273,7 @@ for(int i=0;i<params;i++){
       ntp_setup();
      }
   });
+
   webServer.begin();
 }
 

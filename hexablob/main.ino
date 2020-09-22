@@ -25,6 +25,7 @@ void setup ()
     Serial.println("Error setting up MDNS responder!");
   }
   
+  geoip_get();
   
   ntp_setup ();
   fs_setup ();

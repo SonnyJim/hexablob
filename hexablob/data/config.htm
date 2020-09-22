@@ -18,6 +18,8 @@
 
 <p>Currently playing: %fname_curr%</p>
 
+<p> I think I am somewhere near %location%</p>
+
 <form action="/config">
   <label for="effects">Choose an effect:</label>
   <select name="effects" id="effects">
@@ -32,7 +34,13 @@
 </form>
 
 <br>
+<form action="/config">
+	<label for="tzdbapikey">Timezonedb.com API Key</label>
+<input type="text" id="tzdbapikey" name="tzdbapikey" value="%tzdbapikey%">
+  <input type="submit" value="Set Key">
+</form>
 
+<br>
 <input type="checkbox" id="showtime" onclick="showtime()" name="showtime" value="%show_time%">
   <label for="showtime">Show time</label>
 <br>

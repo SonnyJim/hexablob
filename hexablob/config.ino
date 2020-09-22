@@ -11,13 +11,12 @@ typedef struct
   bool show_time;
   bool show_ip; //Show IP on boot via LEDs
   int tz_offset; //Needs to be signed
-  bool summertime;
+  bool dst;
+  char tzdbapikey[16]; //API key for http://api.timezonedb.com/
+  char location[32];// IANA Location name
 } cfg_t;
 
 cfg_t         cfg;
- //
-//String fname_curr; //Currently playing filename
-bool show_ip; //Whether to flash the IP at startup
 
 #define CFG_FILE "hexablob.cfg"
 
@@ -29,6 +28,8 @@ void cfg_default ()
   cfg.show_time = true;
   cfg.show_ip = false;
   cfg.tz_offset = 9;
+  strcpy (cfg.tzdbapikey, "TZDBAPIKEY");
+  strcpy (cfg.location, "Asia/Phnom Penh");
 }
 
 bool cfg_load(void)

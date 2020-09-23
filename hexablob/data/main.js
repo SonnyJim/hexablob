@@ -38,8 +38,8 @@ function resetCells(color) {
 function writeOut() {
   const rgb = Array.from($('li div'))
     .map(x => $(x).css('background-color'))
-    .map(x => x.replace('rgb(', '['))
-    .map(x => x.replace(')',']'))
+    .map(x => x.replace('rgb(', ''))
+    .map(x => x.replace(')',''))
 
   const out = Array(61)
   rgb.forEach((color, i) => {

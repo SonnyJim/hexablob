@@ -245,12 +245,50 @@ void led_drawtimenum (int num)
   }
 }
 
+void led_paint_from_string (String data)
+{
+  //253,191,0,253,191,
+  int i;
+  int j = 0;
+  int color_step = 1;
+  int start_pos = 0;
+  int value;
+  int red,green,blue;
+  
+  for (i=0;i<=data.length();i++)
+  {
+    if (data.charAt(i) == ',')
+    {
+      Serial.println ("Found needle at " + String(i));
+      value = data.substring (start_pos, i).toInt();
+      Serial.println (value);
+      start_pos = i + 1;
+      if (color_step == 1)
+        red = value;
+      else if (color_step == 2)
+        green = value;
+      else if (color_step == 3)
+        blue = value;
+      color_step++;
+      if (color_step > 3)
+      {
+        Serial.println ("Painting " + String(j));
+        leds[j] = CRGB(red,green,blue);
+        color_step = 1;
+        j++;
+      }
+    }
+      
+  }
+  
+}
 void led_loop() { 
+  /*
   if (running)
     playeseq();
   if (time_valid && cfg.show_time)
     led_drawtime();
-
+*/
   FastLED.show();
   delay(cfg.led_delay);
 }

@@ -157,9 +157,11 @@ void webserver_setup ()
     });
   webServer.onNotFound(notFound);
   webServer.serveStatic("/index.htm", LittleFS, "/index.htm");
-  //webServer.serveStatic("/config", LittleFS, "/config.htm");
-  
-  //webServer.serveStatic("/upload", LittleFS, "/upload.htm");
+  webServer.serveStatic("/styles/style.css", LittleFS, "/styles/style.css");
+  webServer.serveStatic("/styles/colpick.css", LittleFS, "/styles/colpick.css");
+  webServer.serveStatic("/colpick.js", LittleFS, "/colpick.js");
+  webServer.serveStatic("/main.js", LittleFS, "/main.js");
+  webServer.serveStatic("/bob-holness.jpg", LittleFS, "/bob-holness.jpg");
 
   webServer.on("/upload", HTTP_GET, [](AsyncWebServerRequest *request)
   {
@@ -273,7 +275,17 @@ for(int i=0;i<params;i++){
       ntp_setup();
      }
   });
+  webServer.on("/pixel", HTTP_GET, [](AsyncWebServerRequest *request)
+  {
+    Serial.println("pixel");
+    if(request->hasParam("data")) 
+    {
+      AsyncWebParameter* p = request->getParam("data");
+      Serial.println(p->value());
+      led_paint_from_string (String(p->value()));
 
+     }
+  });
   webServer.begin();
 }
 

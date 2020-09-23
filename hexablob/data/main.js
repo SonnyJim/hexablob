@@ -38,7 +38,9 @@ function resetCells(color) {
 function writeOut() {
   const rgb = Array.from($('li div'))
     .map(x => $(x).css('background-color'))
-    .map(x => x.replace('rgb(', ''))
+    .map(x => x.replace('rgb(',''))
+    .map(x => x.replace(', ',','))
+    .map(x => x.replace(' ',''))
     .map(x => x.replace(')',''))
 
   const out = Array(61)
@@ -47,7 +49,10 @@ function writeOut() {
     out[cellMap[i]] = color
   });
 
-  $('#lights-output').text(out.join(', '))
+  $('#lights-output').text(out.join(','))
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("GET", "/pixel?data=" + out, true);
+  xhttp.send();
 }
 
 $(document).ready(() => {

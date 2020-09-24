@@ -61,10 +61,10 @@ $(document).ready(() => {
   resetCells('#fdbf00')
 
   // Initialise palette
-  $($('.palette')[8]).css('background-color', '#fdbf00')
+  $($('.palette')[8]).css('background-color', 'white')
   setState({
     ...getState(),
-    color: '#fdbf00'
+    color: 'white'
   })
 
   // Reset cells button

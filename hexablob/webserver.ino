@@ -159,6 +159,7 @@ void webserver_setup ()
   webServer.serveStatic("/index.htm", LittleFS, "/index.htm");
   webServer.serveStatic("/styles/style.css", LittleFS, "/styles/style.css");
   webServer.serveStatic("/styles/colpick.css", LittleFS, "/styles/colpick.css");
+  webServer.serveStatic("/favicon.ico", LittleFS, "/favicon.ico");
   webServer.serveStatic("/colpick.js", LittleFS, "/colpick.js");
   webServer.serveStatic("/main.js", LittleFS, "/main.js");
   webServer.serveStatic("/bob-holness.jpg", LittleFS, "/bob-holness.jpg");

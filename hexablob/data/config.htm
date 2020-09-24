@@ -62,6 +62,8 @@
 <br>
 <p> <button onclick="save()" type="button">Save</button>	</p>
 <br>
+<p> <button onclick="led_save()" type="button">LED Save</button>	</p>
+<br>
 <a href="/upload">Upload page</a>
 <script>
 
@@ -87,6 +89,11 @@ delay.onchange = function() {
 function save() {
 		var xhttp = new XMLHttpRequest();
 		xhttp.open("GET", "/save", true);
+		xhttp.send();
+	}
+function led_save() {
+		var xhttp = new XMLHttpRequest();
+		xhttp.open("GET", "/led_save", true);
 		xhttp.send();
 	}
 function showtime() {

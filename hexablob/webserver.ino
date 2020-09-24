@@ -152,10 +152,13 @@ void handleUpload(AsyncWebServerRequest *request, String filename, size_t index,
 void webserver_setup ()
 {
   //ip_addr = String(WiFi.localIP()); 
+  /*
   webServer.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
         request->send(200, "text/plain", "Hello, world");
     });
+    */
   webServer.onNotFound(notFound);
+  webServer.serveStatic("/", LittleFS, "/index.htm");
   webServer.serveStatic("/index.htm", LittleFS, "/index.htm");
   webServer.serveStatic("/styles/style.css", LittleFS, "/styles/style.css");
   webServer.serveStatic("/styles/colpick.css", LittleFS, "/styles/colpick.css");
@@ -186,6 +189,11 @@ void webserver_setup ()
     cfg_save ();
   });
   
+  webServer.on("/led_save", HTTP_GET, [](AsyncWebServerRequest *request)
+  {
+    Serial.println ("Saving LED pattern");
+    led_save ("autosave.eseq");
+  });
   webServer.on("/config", HTTP_GET, [](AsyncWebServerRequest *request)
   {
    AsyncWebParameter* p;

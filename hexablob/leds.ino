@@ -60,6 +60,31 @@ headerData_t headerData;
 char rawData[20]; //Raw header data, probably don't actually need this
 char ledData[256]; //needs to be at least as big as the stepsize?
 
+void led_save (String filename)
+{
+  /*
+   * Header: ESEQ
+Model offset: 1
+Step Size: 184
+Model start: 4
+Model size: 183
+
+   */
+  File file;
+  headerData_t header;
+  strncpy (header.magic, "ESEQ", 4);
+  header.model_offset = 1;
+  header.stepsize = 184;
+  header.model_start = 4;
+  header.model_size = 183;
+  file = FSEQFS.open(filename, "w");
+  if (file)
+  {
+    file.write((uint8_t*) &header, sizeof(header));
+    file.write((uint8_t*) &leds, 184);
+    file.close();
+  }
+}
 void openeseq (String filename)
 {
   Serial.println ("Opening: " + filename);

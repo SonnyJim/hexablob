@@ -51,7 +51,7 @@ function writeOut() {
 
   $('#lights-output').text(out.join(','))
   var xhttp = new XMLHttpRequest();
-  xhttp.open("GET", "/pixel?data=" + out, true);
+  xhttp.open("GET", "/pixel?data=" + out + ",", true);
   xhttp.send();
 }
 

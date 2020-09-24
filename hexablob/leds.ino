@@ -255,7 +255,7 @@ void led_paint_from_string (String data)
   int value;
   int red,green,blue;
   
-  for (i=0;i<=data.length();i++)
+  for (i=0;i<=data.length() + 2;i++)
   {
     if (data.charAt(i) == ',')
     {

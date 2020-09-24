@@ -8,7 +8,8 @@ CRGB leds[NUM_LEDS];
 File dataFile; //ESEQ data file
 
 extern bool time_valid;
-
+long paint_time;
+#define PAINT_DELAY 10000
 
 #define LEDNUMLEN 12 //Max length of the number LED array, or rather the max amount of pixels to use per number
 //List LEDs to light up by number, 254 terminates the array
@@ -58,13 +59,12 @@ typedef struct _headerData_t
 headerData_t headerData;
 char rawData[20]; //Raw header data, probably don't actually need this
 char ledData[256]; //needs to be at least as big as the stepsize?
-bool running;
 
 void openeseq (String filename)
 {
   Serial.println ("Opening: " + filename);
   strcpy (cfg.fname_curr, "Nothing");
-  running = false;
+  cfg.status = STOPPED;
   dataFile = FSEQFS.open(filename, "r");
   Serial.println("File size: " + String(dataFile.size()));
   if (dataFile.size() > 0)
@@ -75,7 +75,6 @@ void openeseq (String filename)
    {
     Serial.print ("Error: Header data incorrect ");
     Serial.println (headerData.magic);
-    running = false;
     return;
    }
    
@@ -86,7 +85,7 @@ void openeseq (String filename)
    Serial.println("Model size: " + String(headerData.model_size));
    //Rewind to the start of the data
    dataFile.seek (sizeof(headerData));
-   running = true;  
+   cfg.status = PLAYING;  
    filename.toCharArray(cfg.fname_curr, filename.length() + 1);
   }
 }
@@ -101,7 +100,7 @@ void playeseq ()
   if (dataFile.readBytes (ledData, headerData.stepsize) != headerData.stepsize)
   {
     Serial.println ("Error reading bytes into buffer");
-    running = false;
+    cfg.status = STOPPED;
     return; 
   }
   
@@ -240,9 +239,9 @@ void led_drawtimenum (int num)
   {
     if (timenum[num][i] == 254)
       return; //All finished
-    else
-      leds[timenum[num][i]] = CRGB(255,255,255);
-  }
+      else
+        leds[timenum[num][i]] = CRGB(255,255,255);
+    }
 }
 
 void led_paint_from_string (String data)
@@ -255,13 +254,14 @@ void led_paint_from_string (String data)
   int value;
   int red,green,blue;
   
-  for (i=0;i<=data.length() + 2;i++)
+  paint_time = millis();
+  for (i=0;i<=data.length();i++)
   {
     if (data.charAt(i) == ',')
     {
-      Serial.println ("Found needle at " + String(i));
+      //Serial.println ("Found needle at " + String(i));
       value = data.substring (start_pos, i).toInt();
-      Serial.println (value);
+      //Serial.println (value);
       start_pos = i + 1;
       if (color_step == 1)
         red = value;
@@ -272,7 +272,7 @@ void led_paint_from_string (String data)
       color_step++;
       if (color_step > 3)
       {
-        Serial.println ("Painting " + String(j));
+        //Serial.println ("Painting " + String(j));
         leds[j] = CRGB(red,green,blue);
         color_step = 1;
         j++;
@@ -283,12 +283,18 @@ void led_paint_from_string (String data)
   
 }
 void led_loop() { 
-  /*
-  if (running)
+  
+  if (cfg.status == PLAYING && paint_time == 0)
+  {
     playeseq();
-  if (time_valid && cfg.show_time)
-    led_drawtime();
-*/
+    if (time_valid && cfg.show_time)
+      led_drawtime();
+  }
+  
+  if (millis() > paint_time + PAINT_DELAY)
+  {
+    paint_time = 0;
+  }
   FastLED.show();
   delay(cfg.led_delay);
 }

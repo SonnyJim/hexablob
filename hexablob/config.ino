@@ -2,7 +2,7 @@
 #include <LittleFS.h>
 
 #define FSEQFS LittleFS
-
+enum status_t { BOOTING, STOPPED, PLAYING, PAINTING }; 
 typedef struct
 {
   char fname_curr[64];
@@ -11,9 +11,11 @@ typedef struct
   bool show_time;
   bool show_ip; //Show IP on boot via LEDs
   int tz_offset; //Needs to be signed
+  long dst_start;
   bool dst;
   char tzdbapikey[16]; //API key for http://api.timezonedb.com/
   char location[32];// IANA Location name
+  status_t status;
 } cfg_t;
 
 cfg_t         cfg;
@@ -28,8 +30,10 @@ void cfg_default ()
   cfg.show_time = true;
   cfg.show_ip = false;
   cfg.tz_offset = 9;
+  cfg.dst_start = 0;
   strcpy (cfg.tzdbapikey, "TZDBAPIKEY");
   strcpy (cfg.location, "Asia/Phnom Penh");
+  cfg.status = STOPPED;
 }
 
 bool cfg_load(void)

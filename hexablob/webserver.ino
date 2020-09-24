@@ -239,6 +239,7 @@ for(int i=0;i<params;i++){
     {
       AsyncWebParameter* p = request->getParam("tzdbapikey");
       p->value().toCharArray(cfg.tzdbapikey, p->value().length() + 1);//Why??? pfft
+      //geoip_tzget (String(cfg.location));
      }
     
   request->send(LittleFS, "/config.htm", String(), false, fnameProcessor);
@@ -282,7 +283,7 @@ for(int i=0;i<params;i++){
     if(request->hasParam("data")) 
     {
       AsyncWebParameter* p = request->getParam("data");
-      Serial.println(p->value());
+      //Serial.println(p->value());
       led_paint_from_string (String(p->value()));
 
      }

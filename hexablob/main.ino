@@ -17,6 +17,7 @@ void setup ()
   Serial.begin(115200);
   while (!Serial);
   cfg_setup();
+  cfg.status = BOOTING;
   led_setup();
   wifi_setup();
   Serial.println("Setting up MDNS");

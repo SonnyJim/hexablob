@@ -19,16 +19,16 @@ String fnameProcessor(const String& var)
   else if (var =="show_time")
   {
     if (cfg.show_time)
-      return String("True");
+      return String("checked");
     else
-      return String("False");
+      return String("");
   }
   else if (var =="show_ip")
   {
     if (cfg.show_ip)
-      return String ("True");
+      return String ("checked");
     else
-      return String ("False");
+      return String ("");
   }
   else if (var =="fs_free")
     return String (fs_free() / 1024);

@@ -25,8 +25,11 @@ void setup ()
   {
     Serial.println("Error setting up MDNS responder!");
   }
-  
-  geoip_get();
+
+  if (strcmp (cfg.location, "Unknown/Unknown") == 0)
+    geoip_get();
+  else
+    geoip_tzget(String(cfg.location));
   
   ntp_setup ();
   fs_setup ();
@@ -35,18 +38,6 @@ void setup ()
   openeseq (cfg.fname_curr);
   webserver_setup ();
   
-  /*
-  Dir dir = LittleFS.openDir("/");
-  while (dir.next()) 
-  {
-    Serial.print(dir.fileName());
-    if(dir.fileSize()) 
-    {
-        File f = dir.openFile("r");
-        Serial.println(f.size());
-    }
-  }
-  */
 }
 
 void loop ()

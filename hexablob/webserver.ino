@@ -5,13 +5,21 @@ char ip_addr[15];
 
 int freespace;
 
+String get_status ()
+{
+  if (cfg.status != BUILTIN)
+    return String (cfg.fname_curr);
+  else
+    return String (builtin_names[cfg.builtin_status]);
+}
+
 //Processor for the config page
 String fnameProcessor(const String& var)
 {
   if(var == "combobox")
     return String(getFileCombo());
   else if (var == "fname_curr")
-    return String (cfg.fname_curr);
+    return String (get_status());
   else if (var == "brightness")
     return String (cfg.brightness);   
   else if (var =="led_delay")
@@ -60,6 +68,8 @@ String getFileCombo()
       result += rear;
     } 
   }
+  result += "<option value=\"Pride\">Pride (Built-in)</option>";
+  result += "<option value=\"Cylon\">Cylon (Built-in)</option>";
   return result;  
 }
 
@@ -214,13 +224,26 @@ for(int i=0;i<params;i++){
  */
   if(request->hasParam("effects")) 
   {
+    
     p = request->getParam("effects");
-    if (request->hasParam("delete"))
+    Serial.println (p->value());
+    if (p->value() == "Pride")
+    {
+      Serial.println ("Starting Pride effect");
+      cfg.status = BUILTIN;
+      cfg.builtin_status = PRIDE;
+      //strcpy (cfg.fname_curr, "Pride");
+    }
+    else if (p->value() == "Cylon")
+    {
+      Serial.println ("Starting Cylon effect");
+      cfg.status = BUILTIN;
+      cfg.builtin_status = CYLON;
+    }
+    else if (request->hasParam("delete")) //TODO Bug if they try to delete a built-in effect
       LittleFS.remove(p->value());
     else
-      openeseq(p->value());
-
-    
+      openeseq(p->value()); //TODO default to something safe when file not found  
   }
   
   if(request->hasParam("show_ip")) 

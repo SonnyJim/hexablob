@@ -21,9 +21,10 @@ void ntp_setup() {
     configTime(cfg.tz_offset * 3600, DST_SEC, "pool.ntp.org");
   else
   {
+    /*
     if (cfg.dst)//TODO WHHHHHHHY?
       configTime(cfg.tz_offset, DST_SEC, "pool.ntp.org");
-    else
+    else*/
       configTime(cfg.tz_offset - DST_SEC, DST_SEC, "pool.ntp.org");
   }
 }

@@ -2,7 +2,11 @@
 #include <LittleFS.h>
 
 #define FSEQFS LittleFS
-enum status_t { BOOTING, STOPPED, PLAYING, PAINTING }; 
+enum status_t { BOOTING, STOPPED, ESEQ, BUILTIN, PAINTING }; 
+enum builtin_t {PRIDE, CYLON};
+
+const char* builtin_names[2] = {"Pride", "Cyclon"};
+
 typedef struct
 {
   char fname_curr[64];
@@ -16,6 +20,7 @@ typedef struct
   char tzdbapikey[16]; //API key for http://api.timezonedb.com/
   char location[32];// IANA Location name
   status_t status;
+  builtin_t builtin_status;
   
   uint8_t checksum;//always put at the end
 } cfg_t;

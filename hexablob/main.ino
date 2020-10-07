@@ -5,6 +5,7 @@
 //Pimpin' ain't easy, hours in characters, minutes in LEDs - 1
 //Put filesize free on upload page and don't allow client upload if filesize too big
 //Use Geoip to set clock??
+//Configurable data pin
 
 #include <ESP8266mDNS.h> 
 

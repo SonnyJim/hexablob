@@ -1,7 +1,6 @@
 #include <FastLED.h>
 
-
-#define NUM_LEDS 183 
+#define NUM_LEDS 61 
 #define DATA_PIN 4
 
 CRGB leds[NUM_LEDS];
@@ -110,7 +109,7 @@ void openeseq (String filename)
    Serial.println("Model size: " + String(headerData.model_size));
    //Rewind to the start of the data
    dataFile.seek (sizeof(headerData));
-   cfg.status = PLAYING;  
+   cfg.status = ESEQ;  
    filename.toCharArray(cfg.fname_curr, filename.length() + 1);
   }
 }
@@ -309,9 +308,18 @@ void led_paint_from_string (String data)
 }
 void led_loop() { 
   
-  if (cfg.status == PLAYING && paint_time == 0)
+  if (paint_time == 0)
   {
-    playeseq();
+    if (cfg.status == ESEQ)
+      playeseq();
+    else if (cfg.status == BUILTIN)
+    {
+      if (cfg.builtin_status == PRIDE)
+        pride_loop();
+      if (cfg.builtin_status == CYLON)
+        cylon_loop();      
+    }
+    
     if (time_valid && cfg.show_time)
       led_drawtime();
   }
@@ -331,7 +339,7 @@ void led_setup() {
   //Clear the strip
   fill_solid(leds, NUM_LEDS, CRGB::Blue);
   FastLED.show();
-  delay(500);
+  delay(200);
   FastLED.clear();
   FastLED.show();
 

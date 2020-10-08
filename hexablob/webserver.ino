@@ -70,6 +70,8 @@ String getFileCombo()
   }
   result += "<option value=\"Pride\">Pride (Built-in)</option>";
   result += "<option value=\"Cylon\">Cylon (Built-in)</option>";
+  result += "<option value=\"Cylon Spiral\">Cylon Spiral (Built-in)</option>";
+  result += "<option value=\"Color Palette\">Color Palette (Built-in)</option>";
   return result;  
 }
 
@@ -239,6 +241,18 @@ for(int i=0;i<params;i++){
       Serial.println ("Starting Cylon effect");
       cfg.status = BUILTIN;
       cfg.builtin_status = CYLON;
+    }
+    else if (p->value() == "Cylon Spiral")
+    {
+      Serial.println ("Starting Cylon Spiral effect");
+      cfg.status = BUILTIN;
+      cfg.builtin_status = CYLONSPIRAL;
+    }
+    else if (p->value() == "Color Palette")
+    {
+      Serial.println ("Starting Color Palette effect");
+      cfg.status = BUILTIN;
+      cfg.builtin_status = COLORPALETTE;
     }
     else if (request->hasParam("delete")) //TODO Bug if they try to delete a built-in effect
       LittleFS.remove(p->value());

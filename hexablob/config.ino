@@ -2,10 +2,10 @@
 #include <LittleFS.h>
 
 #define FSEQFS LittleFS
-enum status_t { BOOTING, STOPPED, ESEQ, BUILTIN, PAINTING }; 
-enum builtin_t {PRIDE, CYLON};
+enum status_t { STOPPED, ESEQ, BUILTIN, PAINTING }; 
+enum builtin_t {PRIDE, CYLON, CYLONSPIRAL, COLORPALETTE};
 
-const char* builtin_names[2] = {"Pride", "Cyclon"};
+const char* builtin_names[2] = {"Pride", "Cylon"};
 
 typedef struct
 {
@@ -42,8 +42,10 @@ void cfg_print ()
   Serial.println("tzdbapikey: " + String(cfg.tzdbapikey));
   Serial.println("location: " + String(cfg.location));
   Serial.println("status: " + String(cfg.status));
+  Serial.println("builtin_status: " + String(cfg.builtin_status));
   Serial.println("checksum: " + String(cfg.checksum));
 }
+
 void cfg_default ()
 {
   Serial.println ("Defaulting configuration");
@@ -57,8 +59,8 @@ void cfg_default ()
   strcpy (cfg.tzdbapikey, "TZDBAPIKEY");
   strcpy (cfg.location, "Unknown/Unknown");
   cfg.status = STOPPED;
+  cfg.builtin_status = PRIDE;
   cfg.checksum = cfg_checksum();
-
 }
 
 uint8_t cfg_checksum ()
@@ -82,6 +84,7 @@ bool cfg_load(void)
   if (file)
   {
     file.readBytes((char *) &cfg, sizeof(cfg));
+    cfg_print();
     file.close();
   }
   else
@@ -100,6 +103,7 @@ bool cfg_load(void)
     
 bool cfg_save(void)
 {
+  Serial.println ("Saving LED cfg");
   File file = FileFS.open(CFG_FILE, "w");
   cfg.checksum = cfg_checksum();
   if (file)

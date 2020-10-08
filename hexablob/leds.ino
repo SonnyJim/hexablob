@@ -191,14 +191,9 @@ void led_drawtime ()
 
   hour = ntp_gethours();
   minutes = ntp_getminutes();
-  /*
-  Serial.println ("Hour " + String(ntp_gethours()));
-  Serial.println ("Minutes " + String(ntp_getminutes()));
-  */
   if (hour > 12)
     hour -= 12;
     
-
   led_drawoutsidemin(minutes);
   led_drawsecs (ntp_getseconds());
   led_drawtimenum(hour);
@@ -316,8 +311,12 @@ void led_loop() {
     {
       if (cfg.builtin_status == PRIDE)
         pride_loop();
-      if (cfg.builtin_status == CYLON)
-        cylon_loop();      
+      else if (cfg.builtin_status == CYLON)
+        cylon_loop();
+      else if (cfg.builtin_status == CYLONSPIRAL)
+        cylonspiral_loop();
+      else if (cfg.builtin_status == COLORPALETTE)
+        colorpalette_loop ();
     }
     
     if (time_valid && cfg.show_time)
@@ -343,6 +342,6 @@ void led_setup() {
   FastLED.clear();
   FastLED.show();
 
+  colorpalette_setup ();
 
-  
 }

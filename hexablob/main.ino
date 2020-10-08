@@ -18,7 +18,6 @@ void setup ()
   Serial.begin(115200);
   while (!Serial);
   cfg_setup();
-  cfg.status = BOOTING;
   led_setup();
   wifi_setup();
   Serial.println("Setting up MDNS");
@@ -36,7 +35,9 @@ void setup ()
   fs_setup ();
   if (cfg.show_ip)
     led_drawip();
-  openeseq (cfg.fname_curr);
+  if (cfg.status == ESEQ)
+    openeseq (cfg.fname_curr);
+  
   webserver_setup ();
   
 }
